@@ -1,0 +1,23 @@
+# TODO: Add network configurations
+services:
+  frr:
+    container_name: frrouting
+    privileged: false
+    cap_add: # Linux kernel capabilities needed for setup
+      - CAP_NET_ADMIN
+      - CAP_NET_RAW
+      - CAP_SYS_ADMIN
+    image: quay.io/frrouting/frr:8.5.1
+    volumes:
+      - $PWD/frr:/etc/frr:rw
+
+  bird:
+    container_name: bird_router
+    privileged: false
+    cap_add: # Linux kernel capabilities needed for setup
+      - CAP_NET_ADMIN
+      - CAP_NET_RAW
+      - CAP_SYS_ADMIN
+    image: pierky/bird:3.0-alpha2
+    volumes:
+      - $PWD/bird:/etc/bird:rw
