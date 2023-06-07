@@ -1,7 +1,0 @@
-{
-    "router_id": "192.0.2.4",
-    "bgp_local_as": "65538",
-    "bgp_neightbour_host": "192.0.2.2",
-    "bgp_neightbour_as": "65536",
-    "bgp_source_addr": "192.0.2.4"
-}
