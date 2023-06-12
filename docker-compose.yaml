@@ -9,7 +9,7 @@ services:
       - CAP_SYS_ADMIN
     image: quay.io/frrouting/frr:8.5.1
     volumes:
-      - $PWD/frr:/etc/frr:rw
+      - $PWD/routers/frr/confs:/etc/frr:rw
 
   bird:
     container_name: bird_router
@@ -20,4 +20,18 @@ services:
       - CAP_SYS_ADMIN
     image: pierky/bird:3.0-alpha2
     volumes:
-      - $PWD/bird:/etc/bird:rw
+      - $PWD/routers/bird/confs:/etc/bird:rw
+
+# ExaBGP example, we'll probably have our own Dockerfile instead of using this image
+#  exabgp_sender:
+#    container_name: exabgp_sender
+#    image: pierky/exabgp:4.2.11
+#    volumes:
+#      - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+#
+#
+#  exabgp_listener:
+#    container_name: exabgp_listener
+#    image: pierky/exabgp:4.2.11
+#    volumes:
+#      - $PWD/bgp-listener/confs:/etc/exabgp:rw
