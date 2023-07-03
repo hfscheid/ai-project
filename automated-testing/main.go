@@ -1,48 +1,60 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
-	"os"
-	"text/template"
+    "context"
+    "fmt"
+    "path/filepath"
+
+    "github.com/hfscheid/ai-project/automated-testing/docker"
 )
 
-const (
-    cfgTemplate = "bird.conf"
-    cfgSource = "bird.json"
-)
-
-type BirdConf struct {
-    RouterID string `json:"router_id"`
-    BGPLocalAs string `json:"bgp_local_as"`
-    BGPNeightbourHost string `json:"bgp_neightbour_host"`
-    BGPNeightbourAs string `json:"bgp_neightbour_as"`
-    BGPSourceAddr string `json:"bgp_source_addr"`
-}
 
 func main() {
-    bconf := readConfigFile()
-    tmpl, err := template.New(cfgTemplate).ParseFiles(cfgTemplate)
+    ctx := context.Background()
+    // Connect to Docker client
+    client, err := docker.NewController()
     if err != nil {
-        log.Fatalf("Failed to parse template file: %v\n", err)
+        fmt.Printf("Failed to initialize Docker client: %q", err)
+        return
     }
+    defer func() {
+        if err := client.Shutdown(); err != nil {
+            fmt.Printf("Failed to close Docker connection: %q", err)
+            return
+        }
+    }()
 
-    err = tmpl.Execute(os.Stdout, bconf)
+    // Create container configs and start it
+    absPath, err := filepath.Abs("../")
     if err != nil {
-        log.Fatalf("Failed to execute template: %v\n", err)
+        fmt.Printf("Failed to get valid absolute path: %q", err)
+        return
     }
-}
+    absPath += "/routers/frr/confs"
+    containerInfo := docker.ContainerInfo{
+        ContainerName: "frr",
+        BaseImage: "quay.io/frrouting/frr",
+        ImageVersion: "8.5.1",
+        VolumeSource: absPath,
+        VolumeTarget: "/etc/frr",
+    }
+    cID, err := client.RunContainer(ctx, containerInfo)
+    if err != nil {
+        fmt.Printf("Failed to start container: %q", err)
+        return
+    }
+    
+    // See container logs
+    cLogs, err := client.GetContainerLogs(ctx, cID)
+    if err != nil {
+        fmt.Printf("Failed to get container %q logs: %q", cID, err)
+        return
+    }
+    fmt.Println(cLogs)
 
-func readConfigFile() BirdConf {
-    bconf := BirdConf{}
-    content, err := os.ReadFile(cfgSource)
-    if err != nil {
-        log.Fatalf("Failed to read config file: %v\n", err)
+    // Shutdown container
+    if err := client.RemoveContainer(ctx, cID); err != nil {
+        fmt.Printf("Failed to close Docker connection: %q", err)
+        return
     }
-
-    err = json.Unmarshal(content, &bconf)
-    if err != nil {
-        log.Fatalf("Failed to parse config file content: %v\n", err)
-    }
-    return bconf
 }
