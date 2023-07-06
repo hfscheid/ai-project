@@ -8,15 +8,19 @@ import (
 )
 
 var (
-    tstrouters = &cobra.Command {
-        Use: "tstrouters",
-        Short: "tstrouters - tool for creating, configuring and testing software routers",
-        Version: "0.1.0"
+    automatedTesting = &cobra.Command {
+        Use: "automated-testing",
+        Short: "automated-testing - tool for creating, configuring and testing software routers",
+        Version: "0.1.0",
         SilenceErrors: true,
         SilenceUsage: true,
     }
 )
 
 func Execute() error {
-    return tstrouters.Execute()
+    return automatedTesting.Execute()
+}
+
+func init() {
+    automatedTesting.AddCommand(createcmd)
 }

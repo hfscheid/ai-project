@@ -6,10 +6,16 @@ import (
     "path/filepath"
 
     "github.com/hfscheid/ai-project/automated-testing/docker"
+    "github.com/hfscheid/ai-project/automated-testing/cmd"
 )
 
-
 func main() {
+    if err := cmd.Execute(); err != nil {
+        fmt.Println(err)
+    }
+}
+
+func _main() {
     ctx := context.Background()
     // Connect to Docker client
     client, err := docker.NewController()
