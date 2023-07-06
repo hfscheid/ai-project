@@ -10,8 +10,9 @@ import (
 )
 
 func main() {
-    if err := cmd.Execute(); err != nil {
-        fmt.Println(err)
+    rootCmd := cmd.NewMainCmd("0.1.0")
+    if err := rootCmd.Execute(); err != nil {
+        fmt.Println("Error while starting disco CLI:", err.Error())
     }
 }
 
