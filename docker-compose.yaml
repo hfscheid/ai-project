@@ -1,7 +1,25 @@
-# TODO: Add network configurations
+networks:
+  bgp-test:
+    enable_ipv6: false
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.0.2.0/24
+          gateway: 192.0.2.1
+
 services:
+  exabgp_sender:
+    container_name: exabgp_sender
+    image: pierky/exabgp:4.2.11
+    volumes:
+      - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+    networks:
+      bgp-test:
+        ipv4_address: 192.0.2.2
+
   frr:
-    container_name: frrouting
+    container_name: frr_router
     privileged: false
     cap_add: # Linux kernel capabilities needed for setup
       - CAP_NET_ADMIN
@@ -10,6 +28,9 @@ services:
     image: quay.io/frrouting/frr:8.5.1
     volumes:
       - $PWD/routers/frr/confs:/etc/frr:rw
+    networks:
+      bgp-test:
+        ipv4_address: 192.0.2.3
 
   bird:
     container_name: bird_router
@@ -21,13 +42,9 @@ services:
     image: pierky/bird:3.0-alpha2
     volumes:
       - $PWD/routers/bird/confs:/etc/bird:rw
-
-# ExaBGP example, we'll probably have our own Dockerfile instead of using this image
-#  exabgp_sender:
-#    container_name: exabgp_sender
-#    image: pierky/exabgp:4.2.11
-#    volumes:
-#      - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+    networks:
+      bgp-test:
+        ipv4_address: 192.0.2.4
 #
 #
 #  exabgp_listener:
