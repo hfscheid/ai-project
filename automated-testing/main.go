@@ -5,7 +5,7 @@ import (
     "fmt"
     "path/filepath"
 
-    "github.com/hfscheid/ai-project/automated-testing/docker"
+    "github.com/hfscheid/ai-project/automated-testing/pkg/docker"
     "github.com/hfscheid/ai-project/automated-testing/cmd"
 )
 
