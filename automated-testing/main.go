@@ -10,15 +10,6 @@ import (
 )
 
 func main() {
-    rootCmd := cmd.NewMainCmd("0.1.0")
-    if err := rootCmd.Execute(); err != nil {
-        fmt.Println("Error while starting disco CLI:", err.Error())
-    }
-}
-
-func _main() {
-    ctx := context.Background()
-    // Connect to Docker client
     client, err := docker.NewController()
     if err != nil {
         fmt.Printf("Failed to initialize Docker client: %q", err)
@@ -31,6 +22,14 @@ func _main() {
         }
     }()
 
+    rootCmd := cmd.NewMainCmd("0.1.0", client)
+    if err := rootCmd.Execute(); err != nil {
+        fmt.Println("Error while starting disco CLI:", err.Error())
+    }
+}
+
+func _main() {
+    ctx := context.Background()
     // Create container configs and start it
     absPath, err := filepath.Abs("../")
     if err != nil {

@@ -24,7 +24,7 @@ type Builder interface {
 	Hidden() Builder
 	ExactArgs(argCount int, action func(context.Context, []string) error) *cobra.Command
 	MinimumArgs(argCount int, action func(context.Context, []string) error) *cobra.Command
-	NoArgs(action func(context.Context) error) *cobra.Command
+	NoArgs(action func(context.Context, *cobra.Command) error) *cobra.Command
 	AddSubCommand(cmds ...*cobra.Command) Builder
 	Version(version string) Builder
 	WithOptions(...Option) Builder
@@ -178,10 +178,10 @@ func (b *builder) MinimumArgs(minArgs int, action func(context.Context, []string
 
 // NoArgs - runs the function if no args are given, in case of the user inserting
 // an argument the cmd.help() content will be shown
-func (b *builder) NoArgs(action func(context.Context) error) *cobra.Command {
+func (b *builder) NoArgs(action func(context.Context, *cobra.Command) error) *cobra.Command {
 	b.cmd.Args = cobra.NoArgs
 	b.cmd.RunE = func(*cobra.Command, []string) error {
-		return (action(b.cmd.Context()))
+		return (action(b.cmd.Context(), &b.cmd))
 	}
 	return &b.cmd
 }
