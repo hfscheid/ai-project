@@ -14,6 +14,7 @@ services:
     image: franciscobonand04/exabgp:0.0.0
     volumes:
       - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+      - $PWD/bgp-announcer/scripts:/opt/scripts:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.2
