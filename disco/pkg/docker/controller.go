@@ -4,15 +4,17 @@ import "github.com/docker/docker/client"
 
 type Controller struct {
     cli *client.Client
+    nwPool map[string]string
 }
 
 // baseImage, imageVersion, containerName string
 type ContainerInfo struct {
-    BaseImage string
-    ImageVersion string
-    ContainerName string
-    VolumeSource string
-    VolumeTarget string
+    BaseImage       string
+    ImageVersion    string
+    ContainerName   string
+    VolumeSource    string
+    VolumeTarget    string
+    NetworkName     string
 }
 
 func NewController() (*Controller, error) {
@@ -21,7 +23,7 @@ func NewController() (*Controller, error) {
         return nil, err
 	}
 
-    return &Controller{cli}, nil
+    return &Controller{cli: cli}, nil
 }
 
 func (c *Controller) Shutdown() error {

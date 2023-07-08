@@ -9,12 +9,20 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
+	"github.com/docker/docker/api/types/network"
 )
 
 // RunContainer starts a new container with the informed docker image and name, and returns the container's ID if successful
 func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (string, error) {
     dockerImage := info.BaseImage + ":" + info.ImageVersion
-	err := c.EnsureImage(ctx, dockerImage)
+    networkId, err := c.GetNetworkId(info.NetworkName)
+    endpt := &network.EndpointSettings{
+        NetworkID: networkId,
+    }
+    if err != nil {
+        return "", err
+    }
+	err = c.EnsureImage(ctx, dockerImage)
 	if err != nil {
         return "", err
 	}
@@ -37,7 +45,11 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (stri
                 }, 
             },
         },
-        nil, nil, info.ContainerName)
+        &network.NetworkingConfig{
+            EndpointsConfig: map[string]*network.EndpointSettings{
+                info.NetworkName: endpt,
+            },
+        }, nil, info.ContainerName)
 	if err != nil {
         return "", err
 	}
