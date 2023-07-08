@@ -14,13 +14,24 @@ import (
 
 // newTestRunCmd defines the 'test run' command for Disco CLI
 func (d *Disco) newTestRunCmd() *cobra.Command {
+    flag := cmd.Flag {
+        Name:           "watch",
+        Shorthand:      "w",
+        Usage:          "disco test-run --watch",
+        Value:          &cmd.DiscoOptions.Watch,
+        DefValue:       false,
+        FlagAddMethod:  "BoolVar",
+        DefinedOn:      []string{"run"},
+    }
     return cmd.NewCmd("run").
         WithDescription("Command for running selected test").
         WithExample("Run selected test", "test run").
+        WithFlags(&flag).
         NoArgs(d.runTest)
 }
 
 func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
+    watch := cmd.DiscoOptions.Watch
     test := d.selectedTest
     if test == nil {
         return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
@@ -48,8 +59,9 @@ func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
         }
     }(errCh, errA)
     for _, c := range cntInfos {
-        go func(ctx context.Context, c *docker.ContainerInfo, wg *sync.WaitGroup, errCh chan error) {
-            id, err := d.dockerC.RunContainer(ctx, *c)
+        go func(ctx context.Context, c *docker.ContainerInfo,
+                wg *sync.WaitGroup, errCh chan error) {
+            id, err := d.dockerC.RunContainer(ctx, *c, watch)
             if err != nil {
                 errCh <- fmt.Errorf("%v: %q", id, err)
             }

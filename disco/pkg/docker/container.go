@@ -25,7 +25,7 @@ type ContainerInfo struct {
 }
 
 // RunContainer starts a new container with the informed docker image and name, and returns the container's ID if successful
-func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (string, error) {
+func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch bool) (string, error) {
     dockerImage := info.BaseImage + ":" + info.ImageVersion
     networkId, err := c.GetNetworkId(info.NetworkName)
     endpt := &network.EndpointSettings{
@@ -72,9 +72,11 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (stri
     info.ID = resp.ID
     c.containerPool[info.ContainerName] = info
 
-    statusCode, err := c.ContainerWait(ctx, resp.ID)
-    if err != nil {
-        return "", fmt.Errorf("%d: %s\n", statusCode, err.Error())
+    if watch {
+        statusCode, err := c.ContainerWait(ctx, resp.ID)
+        if err != nil {
+            return "", fmt.Errorf("%d: %s\n", statusCode, err.Error())
+        }
     }
 
     return resp.ID, nil
