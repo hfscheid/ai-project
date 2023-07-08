@@ -1,10 +1,12 @@
-module github.com/hfscheid/ai-project/automated-testing
+module github.com/hfscheid/ai-project/disco
 
 go 1.20
 
 require (
 	github.com/docker/docker v24.0.2+incompatible
 	github.com/spf13/cobra v1.7.0
+	github.com/spf13/pflag v1.0.5
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -19,7 +21,6 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	golang.org/x/mod v0.8.0 // indirect
 	golang.org/x/net v0.6.0 // indirect

@@ -15,6 +15,6 @@ func (c *Controller) EnsureImage(ctx context.Context, image string) error {
 	}
 
 	defer reader.Close()
-	io.Copy(os.Stdout, reader)
-    return nil
+    _, err = io.Copy(os.Stdout, reader)
+    return err
 }

@@ -49,7 +49,7 @@ func NewCmd(use string) Builder {
 
 // WithRequiredFlag sets a flag as required when creating the command
 func (b *builder) WithRequiredFlag(flag string) Builder {
-	b.cmd.MarkFlagRequired(flag)
+    _ = b.cmd.MarkFlagRequired(flag)
 	return b
 }
 
