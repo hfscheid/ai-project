@@ -47,3 +47,20 @@ func ReadConfigFile() (*Tests, error) {
         return nil, fmt.Errorf("Unable to find or create disco config file: %v", err)
     }
 }
+
+func ReadTestConfig(file string) (*TestCase, error) {
+    if _, err := os.Stat(file); err == nil { // File exists
+        testCase := TestCase{}
+        data, err := os.ReadFile(file)
+        if err != nil {
+            return nil, fmt.Errorf("Failed to read test config file: %v", err)
+        }
+        err = yaml.Unmarshal(data, &testCase)
+        if err != nil {
+            return nil, fmt.Errorf("Error unmarshaling %s: %v", file, err)
+        }
+        return &testCase, nil
+    } else {
+        return nil, fmt.Errorf("Unable to find test config: %v", err)
+    }
+}
