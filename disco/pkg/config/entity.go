@@ -6,12 +6,13 @@ import (
 )
 
 type Tests struct {
-    TestCases map[string]TestCase `yaml:"tests"`
+    TestCases map[string]*TestCase `yaml:"tests"`
 }
 
 type TestCase struct {
-    Network Network `yaml:"network"`
-    Containers []Container `yaml:"containers"`
+    Name string `yaml:"name"`
+    Network *Network `yaml:"network"`
+    Containers []*Container `yaml:"containers"`
 }
 
 type Network struct {
