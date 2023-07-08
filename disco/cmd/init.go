@@ -12,6 +12,7 @@ type Disco struct {
     dockerC *docker.Controller
     cli *cobra.Command
     tests *config.Tests
+    selectedTest *config.TestCase
 }
 
 func CreateDisco() (*Disco, error) {
