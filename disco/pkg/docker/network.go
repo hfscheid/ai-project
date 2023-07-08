@@ -45,5 +45,6 @@ func (c *Controller) RemoveNetwork(ctx context.Context, networkName string) erro
     if err != nil {
        return fmt.Errorf("Unable to remove network %q: %q\n", id, err)
     }
+    delete(c.nwPool, networkName)
     return nil
 }

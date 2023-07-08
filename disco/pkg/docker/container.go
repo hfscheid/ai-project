@@ -86,6 +86,7 @@ func (c *Controller) RemoveContainer(ctx context.Context, containerName string) 
     if err != nil {
        return fmt.Errorf("Unable to remove container %q: %q\n", id, err)
     }
+    delete(c.containerPool, containerName)
     return nil
 }
 
