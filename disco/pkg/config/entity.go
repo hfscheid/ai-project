@@ -12,12 +12,14 @@ type TestCase struct {
 }
 
 type Network struct {
+    ID string `yaml:"id"`
     Name string `yaml:"name"`
     Subnet string `yaml:"subnet"`
     Gateway string `yaml:"gateway"` 
 }
 
 type Container struct {
+    ID string `yaml:"id"`
     Name string `yaml:"name"`
     Type Structures `yaml:"type"` 
     ConfigPath string `yaml:"configpath"`
