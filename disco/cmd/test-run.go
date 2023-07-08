@@ -22,8 +22,11 @@ func (d *Disco) newTestRunCmd() *cobra.Command {
 
 func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
     test := d.selectedTest
-    var wg sync.WaitGroup
+    if test == nil {
+        return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
+    }
 
+    var wg sync.WaitGroup
     nwInfo := dockerTranslateNw(test.Network)
     if nwId, err := d.dockerC.CreateNetwork(ctx, nwInfo);
     err != nil {
