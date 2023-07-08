@@ -9,15 +9,15 @@ networks:
           gateway: 192.0.2.1
 
 services:
-  # exabgp_announcer:
-  #   container_name: exabgp_announcer
-  #   image: franciscobonand04/exabgp:0.0.0
-  #   volumes:
-  #     - $PWD/bgp-announcer/confs:/etc/exabgp:rw
-  #     - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts:rw
-  #   networks:
-  #     bgp-test:
-  #       ipv4_address: 192.0.2.2
+  exabgp_announcer:
+    container_name: exabgp_announcer
+    image: franciscobonand04/exabgp:0.0.0
+    volumes:
+      - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+      - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts:rw
+    networks:
+      bgp-test:
+        ipv4_address: 192.0.2.2
 
   frr:
     container_name: frr_router
@@ -46,13 +46,6 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.4
-  #
-  #
-  #  exabgp_listener:
-  #    container_name: exabgp_listener
-  #    image: pierky/exabgp:4.2.11
-  #    volumes:
-  #      - $PWD/bgp-listener/confs:/etc/exabgp:rw
 
   exabgp_listener:
     container_name: exabgp_listener
