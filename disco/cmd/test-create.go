@@ -30,7 +30,7 @@ func (d *Disco) createTest(ctx context.Context, args []string) error {
     }
     if _, ok := d.tests.TestCases[testCase.Name]; !ok {
         d.tests.TestCases[testCase.Name] = testCase
-        return nil
+        return config.WriteToConfigFile(d.tests)
     } else {
         return fmt.Errorf("Test with the same name already exists, must be unique")
     }

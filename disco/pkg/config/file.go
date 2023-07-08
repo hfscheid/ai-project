@@ -48,6 +48,33 @@ func ReadConfigFile() (*Tests, error) {
     }
 }
 
+// WriteToConfigFile tries to add a test to ~/.disco/config.yaml file, if it exists.
+// If it doesn`t, return an error.
+func WriteToConfigFile(tests *Tests) error {
+    home, err := os.UserHomeDir()
+    if err != nil {
+        return fmt.Errorf("Failed to get home dir: %v", err)
+    }
+    cfgFolder := filepath.Join(home, ".disco") 
+    cfgFile := filepath.Join(cfgFolder, "config.yaml")
+    if _, err := os.Stat(cfgFile); err == nil { // File exists
+        f, err := os.OpenFile(cfgFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+        if err != nil {
+            return fmt.Errorf("Failed to open disco config file: %v", err)
+        }
+        data, err := yaml.Marshal(tests)
+        if err != nil {
+            return fmt.Errorf("Error marshaling new test: %v", err)
+        }
+        if _, err := f.WriteString(string(data)); err != nil {
+            return fmt.Errorf("Error updating disco config file: %v", err)
+        }
+        return f.Close()
+    } else {
+        return fmt.Errorf("Unable to add test to disco config file: %v", err)
+    }
+}
+
 func ReadTestConfig(file string) (*TestCase, error) {
     if _, err := os.Stat(file); err == nil { // File exists
         testCase := TestCase{}
