@@ -12,6 +12,18 @@ import (
 	"github.com/docker/docker/api/types/network"
 )
 
+// Information required to build and run the container, 
+// plus its ID after creation
+type ContainerInfo struct {
+    BaseImage       string
+    ImageVersion    string
+    ContainerName   string
+    VolumeSource    string
+    VolumeTarget    string
+    NetworkName     string
+    ID              string
+}
+
 // RunContainer starts a new container with the informed docker image and name, and returns the container's ID if successful
 func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (string, error) {
     dockerImage := info.BaseImage + ":" + info.ImageVersion
@@ -57,6 +69,8 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (stri
 	if err := c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
         return "", err
 	}
+    info.ID = resp.ID
+    c.containerPool[info.ContainerName] = info
 
     statusCode, err := c.ContainerWait(ctx, resp.ID)
     if err != nil {
@@ -66,7 +80,8 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo) (stri
     return resp.ID, nil
 }
 
-func (c *Controller) RemoveContainer(ctx context.Context, id string) error {
+func (c *Controller) RemoveContainer(ctx context.Context, containerName string) error {
+    id := c.containerPool[containerName].ID
     err := c.cli.ContainerRemove(ctx, id, types.ContainerRemoveOptions{})
     if err != nil {
        return fmt.Errorf("Unable to remove container %q: %q\n", id, err)
