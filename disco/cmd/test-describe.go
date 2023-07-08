@@ -18,15 +18,13 @@ Containers:
 `
 
 const networkTemplate =
-`   ID: %s
-    Name: %s
+`   Name: %s
     Subnet: %s
     Gateway: %s
 `
 
 const containerTemplate =
-`   ID: %s
-    Name: %s
+`   Name: %s
     Type: %s
     ConfigPath: %s
     IP: %s
@@ -60,33 +58,12 @@ func (d *Disco) describeTest(_ context.Context, c *cobra.Command) error {
     return nil
 }
 
-
-func TetsdescribeTest(currTest *config.TestCase) error {
-    if currTest == nil {
-        return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
-    }
-    netDesc := generateNetworkDescription(currTest.Network)
-    containerDesc := ""
-    for _, c := range currTest.Containers {
-        containerDesc += generateContainerDescription(c)
-    }
-    testDesc := fmt.Sprintf(
-        testCaseTemplate,
-        currTest.Name,
-        netDesc,
-        containerDesc,
-    )
-    fmt.Println(testDesc)
-    return nil
-}
-
 func generateNetworkDescription(net *config.Network) string {
     if net == nil {
-        return fmt.Sprintf(networkTemplate, "-", "-", "-", "-")
+        return fmt.Sprintf(networkTemplate, "-", "-", "-")
     }
     return fmt.Sprintf(
         networkTemplate,
-        net.ID,
         net.Name,
         net.Subnet,
         net.Gateway,
@@ -95,11 +72,10 @@ func generateNetworkDescription(net *config.Network) string {
 
 func generateContainerDescription(c *config.Container) string {
     if c == nil {
-        return fmt.Sprintf(containerTemplate, "-", "-", "-", "-", "-")
+        return fmt.Sprintf(containerTemplate, "-", "-", "-", "-")
     }
     return fmt.Sprintf(
         containerTemplate,
-        c.ID,
         c.Name,
         c.Type.String(),
         c.ConfigPath,
