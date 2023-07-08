@@ -16,6 +16,7 @@ func (d *Disco) newTestCmd() *cobra.Command {
         AddSubCommand(d.newTestRunCmd()).
         AddSubCommand(d.newTestSelectCmd()).
         AddSubCommand(d.newTestStopCmd()).
+        AddSubCommand(d.newTestDescribeCmd()).
         Super()
 }
 

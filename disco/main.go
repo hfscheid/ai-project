@@ -1,9 +1,9 @@
 package main
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/hfscheid/ai-project/disco/cmd"
+	"github.com/hfscheid/ai-project/disco/cmd"
 )
 
 // To run the cli properly, run `go install` from within the /disco directory
