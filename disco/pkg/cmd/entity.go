@@ -4,5 +4,6 @@ package cmd
 var DiscoOptions struct {
 	ConfigDir string
     Router string
+    Watch bool
 }
 
