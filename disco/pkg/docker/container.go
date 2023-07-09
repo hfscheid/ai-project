@@ -82,6 +82,15 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
     return resp.ID, nil
 }
 
+func (c *Controller) StopContainer(ctx context.Context, containerName string) error {
+    id := c.containerPool[containerName].ID
+    err := c.cli.ContainerStop(ctx, id, container.StopOptions{})
+    if err != nil {
+       return fmt.Errorf("Unable to stop container %q: %q\n", id, err)
+    }
+    return nil
+}
+
 func (c *Controller) RemoveContainer(ctx context.Context, containerName string) error {
     id := c.containerPool[containerName].ID
     err := c.cli.ContainerRemove(ctx, id, types.ContainerRemoveOptions{})
