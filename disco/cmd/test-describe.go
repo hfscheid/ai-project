@@ -26,7 +26,7 @@ const networkTemplate =
 
 const containerTemplate =
 `   Name: %s
-    Type: %s
+    Image: %s
     ConfigPaths: %s
     IP: %s
 `
@@ -78,7 +78,7 @@ func generateContainerDescription(c *config.Container) string {
     return fmt.Sprintf(
         containerTemplate,
         c.Name,
-        c.Type.String(),
+        fmt.Sprintf("%s:%s", c.Image.Name, c.Image.Version),
         strings.Join(c.ConfigPaths, ","),
         c.IP,
     )

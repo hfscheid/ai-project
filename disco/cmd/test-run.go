@@ -93,24 +93,11 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.C
                 VolumeTarget: dirs[1],
             })
         }
-        baseImage, imageVersion := 
-        func () (string, string) {
-            switch c.Type {
-            case config.EXABGP:
-                return "franciscobnand04/exabgp", "0.0.0"
-            case config.BIRD:
-                return "franciscobnand04/bird", "0.0.0"
-            case config.FRR:
-                return "quay.io/frrouting/frr", "8.5.1"
-            default:
-                return "", ""
-            }
-        }()
         cInfo := docker.ContainerInfo {
             ContainerName: c.Name,
             NetworkName: nwName,
-            BaseImage: baseImage,
-            ImageVersion: imageVersion,
+            BaseImage: c.Image.Name,
+            ImageVersion: c.Image.Version,
             Volumes: vols,
             ContainerIp: c.IP,
             ExposePort: fmt.Sprintf("%v",c.ExposedPort),
