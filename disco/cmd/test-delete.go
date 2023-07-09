@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/hfscheid/ai-project/disco/pkg/cmd"
@@ -29,10 +30,20 @@ func (d *Disco) deleteTest(ctx context.Context, c *cobra.Command) error {
     if err != nil {
         return fmt.Errorf("Failed to remove test from config file: %v", err)
     }
-
-    err = d.dockerC.RemoveContainer(ctx, currTest.Name)
+    errs := []error{}
+    for _, container := range currTest.Containers {
+        err = d.dockerC.RemoveContainer(ctx, container.Name)
+        if err != nil {
+            errs = append(errs, err)
+        }
+    }
+    if err := errors.Join(errs...);
+    err != nil {
+        return fmt.Errorf("Unable to remove containers: %v", err)
+    }
+    err = d.dockerC.RemoveNetwork(ctx, currTest.Network.Name)
     if err != nil {
-        return fmt.Errorf("Unable to remove container: %v", err)
+        return fmt.Errorf("Unable to remove network: %v", err)
     }
     return nil
 }
