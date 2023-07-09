@@ -38,6 +38,9 @@ func (d *Disco) sendAnnoucement(ctx context.Context, args []string) error {
     if container == nil {
         return fmt.Errorf("Unable to find container %q in current test", containerName)
     }
+    if container.ExposedPort == 0 {
+        return fmt.Errorf("Container %q doesn`t have exposed ports", containerName)
+    }
 
     _, err := http.PostForm(
         fmt.Sprintf("http://127.0.0.1:%d", container.ExposedPort),
