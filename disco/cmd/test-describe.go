@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hfscheid/ai-project/disco/pkg/cmd"
 	"github.com/hfscheid/ai-project/disco/pkg/config"
@@ -26,7 +27,7 @@ const networkTemplate =
 const containerTemplate =
 `   Name: %s
     Type: %s
-    ConfigPath: %s
+    ConfigPaths: %s
     IP: %s
 `
 
@@ -78,7 +79,7 @@ func generateContainerDescription(c *config.Container) string {
         containerTemplate,
         c.Name,
         c.Type.String(),
-        c.ConfigPath,
+        strings.Join(c.ConfigPaths, ","),
         c.IP,
     )
 }

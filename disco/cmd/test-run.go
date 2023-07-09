@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/hfscheid/ai-project/disco/pkg/cmd"
@@ -84,17 +85,25 @@ func dockerTranslateNw(nw *config.Network) docker.NetworkInfo {
 func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.ContainerInfo {
     cInfos := make([]docker.ContainerInfo, len(cs))
     for i, c := range(cs) {
-        baseImage, imageVersion, volumeTarget := 
-            func () (string, string, string) {
+        vols := []docker.VolumeInfo{}
+        for _, p := range c.ConfigPaths {
+            dirs := strings.Split(p, ":")
+            vols = append(vols, docker.VolumeInfo{
+                VolumeSource: dirs[0],
+                VolumeTarget: dirs[1],
+            })
+        }
+        baseImage, imageVersion := 
+        func () (string, string) {
             switch c.Type {
             case config.EXABGP:
-                return "franciscobnand04/exabgp", "0.0.0", "/etc/exabgp"
+                return "franciscobnand04/exabgp", "0.0.0"
             case config.BIRD:
-                return "franciscobnand04/bird", "0.0.0", "/etc/bird"
+                return "franciscobnand04/bird", "0.0.0"
             case config.FRR:
-                return "quay.io/frrouting/frr", "8.5.1", "/etc/frr"
+                return "quay.io/frrouting/frr", "8.5.1"
             default:
-                return "", "", ""
+                return "", ""
             }
         }()
         cInfo := docker.ContainerInfo {
@@ -102,8 +111,7 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.C
             NetworkName: nwName,
             BaseImage: baseImage,
             ImageVersion: imageVersion,
-            VolumeTarget: volumeTarget,
-            VolumeSource: c.ConfigPath,
+            Volumes: vols,
             ContainerIp: c.IP,
             ExposePort: fmt.Sprintf("%v",c.ExposedPort),
         }

@@ -26,7 +26,7 @@ type Container struct {
     ID string
     Name string `yaml:"name"`
     Type Structures `yaml:"type"` 
-    ConfigPath string `yaml:"configpath"`
+    ConfigPaths []string `yaml:"configpaths"`
     IP string `yaml:"ip"`
     ExposedPort uint `yaml:"exposedport"`
 }
