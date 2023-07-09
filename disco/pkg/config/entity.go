@@ -28,6 +28,7 @@ type Container struct {
     Type Structures `yaml:"type"` 
     ConfigPath string `yaml:"configpath"`
     IP string `yaml:"ip"`
+    ExposedPort uint `yaml:"exposedport"`
 }
 
 type Structures int 
