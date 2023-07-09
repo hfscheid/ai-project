@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hfscheid/ai-project/disco/cmd"
@@ -8,7 +9,8 @@ import (
 
 // To run the cli properly, run `go install` from within the /disco directory
 func main() {
-    disco, err := cmd.CreateDisco()
+    ctx := context.Background()
+    disco, err := cmd.CreateDisco(ctx)
     if err != nil {
         fmt.Println(err)
         return

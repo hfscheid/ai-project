@@ -13,6 +13,11 @@ import (
 	"github.com/docker/go-connections/nat"
 )
 
+type VolumeInfo struct {
+    VolumeSource    string
+    VolumeTarget    string
+}
+
 // Information required to build and run the container,
 // plus its ID after creation
 type ContainerInfo struct {
@@ -20,9 +25,8 @@ type ContainerInfo struct {
     ImageVersion    string
     ContainerName   string
     ContainerIp     string
+    Volumes         []VolumeInfo
     ExposePort      string
-    VolumeSource    string
-    VolumeTarget    string
     NetworkName     string
     ID              string
 }
@@ -43,6 +47,16 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
         return "", err
 	}
 
+    vols := []mount.Mount{}
+    for _, vol := range info.Volumes {
+        vols = append(vols, mount.Mount{
+            Type: mount.TypeBind,
+            Source: vol.VolumeSource,
+            Target: vol.VolumeTarget,
+            ReadOnly: false,
+        })
+    }
+
 	resp, err := c.cli.ContainerCreate(
         ctx,
         &container.Config{
@@ -55,20 +69,13 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
         &container.HostConfig{
             Privileged: false,
             CapAdd: []string{"CAP_NET_ADMIN", "CAP_NET_RAW", "CAP_SYS_ADMIN"},
-            Mounts: []mount.Mount{
-                {
-                    Type: mount.TypeBind,
-                    Source: info.VolumeSource,
-                    Target: info.VolumeTarget,
-                    ReadOnly: false,
-                }, 
-            },
+            Mounts: vols,
         },
         &network.NetworkingConfig{
             EndpointsConfig: map[string]*network.EndpointSettings{
                 info.NetworkName: endpt,
             },
-        }, nil, info.ContainerName)
+        }, nil, fmt.Sprintf("disco-%s", info.ContainerName))
 	if err != nil {
         return "", err
 	}

@@ -28,7 +28,7 @@ func (c *Controller) GetNetworkId(networkName string) (string, error) {
 func (c *Controller) CreateNetwork(ctx context.Context, info NetworkInfo) (string, error) {
     resp, err := c.cli.NetworkCreate(
         ctx,
-        info.NetworkName,
+        fmt.Sprintf("disco-%s", info.NetworkName),
         types.NetworkCreate{},
     )
     if err != nil {

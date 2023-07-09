@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hfscheid/ai-project/disco/pkg/config"
@@ -15,9 +16,9 @@ type Disco struct {
     selectedTest *config.TestCase
 }
 
-func CreateDisco() (*Disco, error) {
+func CreateDisco(ctx context.Context) (*Disco, error) {
     disco := &Disco{}
-    dockerC, err := docker.NewController()
+    dockerC, err := docker.NewController(ctx)
     if err != nil {
         return nil, fmt.Errorf("Failed to start Docker client: %v", err)
     }
