@@ -88,9 +88,9 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.C
             func () (string, string, string) {
             switch c.Type {
             case config.EXABGP:
-                return "something", "latest", "/etc/exabgp"
+                return "franciscobnand04/exabgp", "0.0.0", "/etc/exabgp"
             case config.BIRD:
-                return "pierky/bird", "latest", "/etc/bird"
+                return "franciscobnand04/bird", "0.0.0", "/etc/bird"
             case config.FRR:
                 return "quay.io/frrouting/frr", "8.5.1", "/etc/frr"
             default:
