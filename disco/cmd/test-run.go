@@ -104,6 +104,8 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.C
             ImageVersion: imageVersion,
             VolumeTarget: volumeTarget,
             VolumeSource: c.ConfigPath,
+            ContainerIp: c.IP,
+            ExposePort: fmt.Sprintf("%v",c.ExposedPort),
         }
         cInfos[i] = cInfo
     }

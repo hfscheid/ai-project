@@ -10,14 +10,17 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
+	"github.com/docker/go-connections/nat"
 )
 
-// Information required to build and run the container, 
+// Information required to build and run the container,
 // plus its ID after creation
 type ContainerInfo struct {
     BaseImage       string
     ImageVersion    string
     ContainerName   string
+    ContainerIp     string
+    ExposePort      string
     VolumeSource    string
     VolumeTarget    string
     NetworkName     string
@@ -30,6 +33,7 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
     networkId, err := c.GetNetworkId(info.NetworkName)
     endpt := &network.EndpointSettings{
         NetworkID: networkId,
+        IPAddress: info.ContainerIp,
     }
     if err != nil {
         return "", err
@@ -44,6 +48,9 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
         &container.Config{
             Image: dockerImage,
             Tty:   false,
+            ExposedPorts: nat.PortSet{
+                nat.Port(info.ExposePort): struct{}{},
+            },
         },
         &container.HostConfig{
             Privileged: false,
