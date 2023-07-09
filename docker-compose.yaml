@@ -56,3 +56,5 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.5
+    stdin_open: true
+    tty: true
