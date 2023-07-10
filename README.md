@@ -104,3 +104,22 @@ containers: # List of containers to be created during the test
     configpaths: # Path to hosts' directories that will be mounted in the container
       - <path to host directory>:<path to container directory>
 ```
+
+### Known Limitations
+
+- `disco test create` doesn't validate the given YAML file for missing fields or invalid information yet.
+    - This validation can be implemented using [go-playground/validator](https://github.com/go-playground/validator).
+- When creating new containers and networks, the prefix "disco-" is added to the structure name defined by the user.
+This name is used by `disco test stop` and `disco test delete`, but if more than 1 containers or networks have the same name,
+the wrong structure might be deleted.
+- The script to analyze ExaBGP's logs is not yet integrated with the DISCO CLI.
+- Currently only one IPAM configuration is supported when defining a network.
+- Currently only one port of a container can be exposed and bounded to the localhost.
+- The CLI supports route announcement commands, but not withdraws (one can use `disco announce` to send any command to ExaBGP though).
+
+## Next Steps
+
+- Improve DISCO CLI
+    - Add unit tests
+    - Resolve the limitations mentioned previously
+- Add more examples of different network topologies
