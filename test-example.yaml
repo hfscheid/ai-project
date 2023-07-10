@@ -12,6 +12,7 @@ containers:
     ip: 192.0.2.2
     configpaths:
       - $PWD/bgp-announcer/confs:/etc/exabgp
+      - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts 
   - name: exa-listener
     image:
       name: franciscobonand04/exabgp
