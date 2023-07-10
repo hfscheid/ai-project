@@ -1,0 +1,10 @@
+
+Announcement:
+	Peer:
+		Addr:	192.0.2.4
+		AS:		65200
+	Prefix(es):	122.23.0.0/24
+	Next-hop:	65200
+	AS-path		65200, 65050
+	Community:	5400:3
+
