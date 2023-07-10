@@ -2,6 +2,7 @@ package config
 
 type Tests struct {
     TestCases map[string]*TestCase `yaml:"tests"`
+    SelectedTest *TestCase `yaml:"selectedtest"`
 }
 
 type TestCase struct {

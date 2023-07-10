@@ -29,6 +29,7 @@ func CreateDisco(ctx context.Context) (*Disco, error) {
         return nil, fmt.Errorf("Failed to read/create config file: %v", err)
     }
     disco.tests = tests
+    disco.selectedTest = disco.tests.SelectedTest
     disco.createCLI()    
     return disco, nil
 }

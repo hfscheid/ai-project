@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hfscheid/ai-project/disco/pkg/cmd"
+	"github.com/hfscheid/ai-project/disco/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +22,6 @@ func (d *Disco) selectTest(ctx context.Context, s []string) error {
     if _, ok := d.tests.TestCases[testName]; !ok {
         return fmt.Errorf("Unable to find test %q", testName)
     }
-    d.selectedTest = d.tests.TestCases[testName]
-    return nil
+    d.tests.SelectedTest = d.tests.TestCases[testName]
+    return config.WriteToConfigFile(d.tests)
 }
