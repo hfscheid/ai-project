@@ -34,6 +34,8 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.3
+    stdin_open: true
+    tty: true
 
   bird:
     container_name: bird_router
@@ -48,6 +50,8 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.4
+    stdin_open: true
+    tty: true
 
   exabgp_listener:
     container_name: exabgp_listener
