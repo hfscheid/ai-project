@@ -123,3 +123,12 @@ the wrong structure might be deleted.
     - Add unit tests
     - Resolve the limitations mentioned previously
 - Add more examples of different network topologies
+
+## References
+
+- https://github.com/ksator/frrouting_demo/tree/master
+- https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/dynamicrouting/bgp_sample_frr.html
+- https://deploy.equinix.com/developers/docs/metal/bgp/route-bgp-with-bird/#gathering-your-neighbor-information
+- https://github.com/CZ-NIC/bird/tree/master
+- https://github.com/Exa-Networks/exabgp/tree/main
+- https://bird.network.cz/doc/bird-1.html
