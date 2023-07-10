@@ -105,6 +105,9 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
 }
 
 func (c *Controller) StopContainer(ctx context.Context, containerName string) error {
+    if _, ok := c.containerPool[containerName]; !ok {
+        return fmt.Errorf("Unable to stop container %q: container not found", containerName)
+    }
     id := c.containerPool[containerName].ID
     err := c.cli.ContainerStop(ctx, id, container.StopOptions{})
     if err != nil {

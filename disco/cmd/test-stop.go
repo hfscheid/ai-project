@@ -23,15 +23,15 @@ func (d *Disco) stopTest (ctx context.Context, c *cobra.Command) error {
     // docker stop all
     errs := []error{}
     for _, container := range currTest.Containers {
-        cont := container
-        err := d.dockerC.StopContainer(ctx, cont.Name)
+        contName := fmt.Sprintf("/disco-%s", container.Name)
+        err := d.dockerC.StopContainer(ctx, contName)
         if err != nil {
             errs = append(errs, err)
         }
     }
     if err := errors.Join(errs...);
     err != nil {
-        fmt.Printf("Unable to stop containers: %v\n", err)
+        fmt.Printf("Unable to stop containers:\n%v\n", err)
     }
     return nil
 }

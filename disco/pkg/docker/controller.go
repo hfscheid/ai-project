@@ -71,7 +71,7 @@ func (c *Controller) RegisterContainers(ctx context.Context) error {
     }
     for _, cont := range contList {
         for _, name := range cont.Names {
-            if strings.HasPrefix(name, "disco-") {
+            if strings.HasPrefix(name, "/disco-") {
                 var netName string
                 imageData := strings.Split(cont.Image, ":")
                 if len(imageData) != 2 {
@@ -86,9 +86,6 @@ func (c *Controller) RegisterContainers(ctx context.Context) error {
                         VolumeSource: vol.Source,
                         VolumeTarget: vol.Destination,
                     })
-                }
-                if len(cont.NetworkSettings.Networks) != 1 {
-                    return fmt.Errorf("Error in container %q: currently only 1 network is supported", name)
                 }
                 for key := range cont.NetworkSettings.Networks {
                     if strings.HasPrefix(key, "disco-") {
