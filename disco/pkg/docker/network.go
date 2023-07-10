@@ -26,6 +26,9 @@ func (c *Controller) GetNetworkId(networkName string) (string, error) {
 }
 
 func (c *Controller) CreateNetwork(ctx context.Context, info NetworkInfo) (string, error) {
+    if info.NetworkName == "bridge" || info.NetworkName == "host" || info.NetworkName == "none" {
+        return "", fmt.Errorf("Network can't be named 'bridge', 'host' or 'none'")
+    }
     resp, err := c.cli.NetworkCreate(
         ctx,
         fmt.Sprintf("disco-%s", info.NetworkName),
