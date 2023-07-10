@@ -34,7 +34,8 @@ func (d *Disco) deleteTest(ctx context.Context, c *cobra.Command) error {
     }
     errs := []error{}
     for _, container := range currTest.Containers {
-        err = d.dockerC.RemoveContainer(ctx, container.Name)
+        contName := fmt.Sprintf("/disco-%s", container.Name)
+        err = d.dockerC.RemoveContainer(ctx, contName)
         if err != nil {
             errs = append(errs, err)
         }
@@ -44,7 +45,8 @@ func (d *Disco) deleteTest(ctx context.Context, c *cobra.Command) error {
         fmt.Printf("Unable to remove containers: %v\n", err)
         return nil
     }
-    err = d.dockerC.RemoveNetwork(ctx, currTest.Network.Name)
+    netName := fmt.Sprintf("disco-%s", currTest.Network.Name)
+    err = d.dockerC.RemoveNetwork(ctx, netName)
     if err != nil {
         fmt.Printf("Unable to remove network: %v\n", err)
     }

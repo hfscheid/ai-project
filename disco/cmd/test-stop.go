@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/hfscheid/ai-project/disco/pkg/cmd"
@@ -17,21 +16,19 @@ func (d *Disco) newTestStopCmd() *cobra.Command {
         NoArgs(d.stopTest)
 }
 
-func (d *Disco) stopTest (ctx context.Context, c *cobra.Command) error {
+func (d *Disco) stopTest(ctx context.Context, c *cobra.Command) error {
     // get all active containers and network from current test suite
     currTest := d.selectedTest
     // docker stop all
-    errs := []error{}
+    fmt.Println("Stopping containers...")
     for _, container := range currTest.Containers {
         contName := fmt.Sprintf("/disco-%s", container.Name)
         err := d.dockerC.StopContainer(ctx, contName)
         if err != nil {
-            errs = append(errs, err)
+            fmt.Printf("Error stopping container %s: %v\n", contName, err)
+            continue
         }
-    }
-    if err := errors.Join(errs...);
-    err != nil {
-        fmt.Printf("Unable to stop containers:\n%v\n", err)
+        fmt.Printf("%s stopped\n", contName)
     }
     return nil
 }
