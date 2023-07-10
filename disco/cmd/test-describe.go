@@ -27,6 +27,7 @@ const networkTemplate =
 const containerTemplate =
 `   Name: %s
     Image: %s
+    ExposedPort: %s
     ConfigPaths: %s
     IP: %s
 `
@@ -74,12 +75,17 @@ func generateNetworkDescription(net *config.Network) string {
 
 func generateContainerDescription(c *config.Container) string {
     if c == nil {
-        return fmt.Sprintf(containerTemplate, "-", "-", "-", "-")
+        return fmt.Sprintf(containerTemplate, "-", "-", "-", "-", "-")
+    }
+    expPort := "-"
+    if c.ExposedPort != 0 {
+        expPort = fmt.Sprintf("%d", c.ExposedPort)
     }
     return fmt.Sprintf(
         containerTemplate,
         c.Name,
         fmt.Sprintf("%s:%s", c.Image.Name, c.Image.Version),
+        expPort,
         strings.Join(c.ConfigPaths, ","),
         c.IP,
     )

@@ -11,16 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// newAnnouceCmd defines the 'annouce' command for Disco CLI
-func (d *Disco) newAnnouceCmd() *cobra.Command {
-    return cmd.NewCmd("annouce").
-        WithDescription("Command for annoucing BGP routes").
-        WithExample("Command syntax", "annouce <exabgp_container_name> <annouce_command>").
-        WithExample("Annoucing a route", "annouce exabgp1 'annouce route 100.10.0.0/24 next-hop self'").
-        ExactArgs(2, d.sendAnnoucement)
+// newAnnounceCmd defines the 'annouce' command for Disco CLI
+func (d *Disco) newAnnounceCmd() *cobra.Command {
+    return cmd.NewCmd("announce").
+        WithDescription("Command for announcing BGP routes").
+        WithExample("Command syntax", "announce <exabgp_container_name> <announce_command>").
+        WithExample("Announcing a route", "announce exabgp1 'announce route 100.10.0.0/24 next-hop self'").
+        ExactArgs(2, d.sendAnnouncement)
 }
 
-func (d *Disco) sendAnnoucement(ctx context.Context, args []string) error {
+func (d *Disco) sendAnnouncement(ctx context.Context, args []string) error {
     currTest := d.selectedTest
     if currTest == nil {
         return fmt.Errorf("No test selected, run 'disco test select <test_name>'")

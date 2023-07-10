@@ -44,10 +44,10 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
     if err != nil {
         return "", err
     }
-	err = c.EnsureImage(ctx, dockerImage)
-	if err != nil {
+    err = c.EnsureImage(ctx, dockerImage)
+    if err != nil {
         return "", err
-	}
+    }
 
     vols := []mount.Mount{}
     for _, vol := range info.Volumes {
@@ -64,45 +64,55 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
         Image: dockerImage,
         Tty:   false,
     }
+    hostCfg := &container.HostConfig{
+        Privileged: false,
+        CapAdd: []string{"CAP_NET_ADMIN", "CAP_NET_RAW", "CAP_SYS_ADMIN"},
+        Mounts: vols,
+    }
     if info.ExposePort != "" {
+        port := nat.Port(info.ExposePort)  
         containerCfg.ExposedPorts = nat.PortSet{
-            nat.Port(info.ExposePort): struct{}{},
+            port: struct{}{},
+        }
+        hostCfg.PortBindings = nat.PortMap{
+            port: []nat.PortBinding{
+                {
+                    HostIP: "0.0.0.0",
+                    HostPort: info.ExposePort,
+                },
+            },
         }
     }
-	resp, err := c.cli.ContainerCreate(
+    resp, err := c.cli.ContainerCreate(
         ctx,
         containerCfg,
-        &container.HostConfig{
-            Privileged: false,
-            CapAdd: []string{"CAP_NET_ADMIN", "CAP_NET_RAW", "CAP_SYS_ADMIN"},
-            Mounts: vols,
-        },
+        hostCfg,
         &network.NetworkingConfig{
             EndpointsConfig: map[string]*network.EndpointSettings{
                 info.NetworkName: endpt,
             },
         }, nil, containerName)
-	if err != nil {
-        return "", err
-	}
-
-    tst := strings.NewReader(fmt.Sprintf("Running container [%s] %s\n", resp.ID, containerName))
-    _, _ = io.Copy(os.Stdout, tst)
-	if err := c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-        return "", err
-	}
-    info.ID = resp.ID
-    c.containerPool[info.ContainerName] = info
-
-    if watch {
-        statusCode, err := c.ContainerWait(ctx, resp.ID)
         if err != nil {
-            return "", fmt.Errorf("%d: %s\n", statusCode, err.Error())
+            return "", err
         }
-    }
 
-    return resp.ID, nil
-}
+        tst := strings.NewReader(fmt.Sprintf("Running container [%s] %s\n", resp.ID, containerName))
+        _, _ = io.Copy(os.Stdout, tst)
+        if err := c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+            return "", err
+        }
+        info.ID = resp.ID
+        c.containerPool[info.ContainerName] = info
+
+        if watch {
+            statusCode, err := c.ContainerWait(ctx, resp.ID)
+            if err != nil {
+                return "", fmt.Errorf("%d: %s\n", statusCode, err.Error())
+            }
+        }
+
+        return resp.ID, nil
+    }
 
 func (c *Controller) StopContainer(ctx context.Context, containerName string) error {
     if _, ok := c.containerPool[containerName]; !ok {
