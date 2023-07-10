@@ -18,7 +18,7 @@ type NetworkInfo struct {
 }
 
 func (c *Controller) GetNetworkId(networkName string) (string, error) {
-    nwInfo, ok := c.nwPool[networkName]
+    nwInfo, ok := c.nwPool[fmt.Sprintf("disco-%s", networkName)]
     if !ok {
         return "", fmt.Errorf("Could not find network %v", networkName)
     }
@@ -29,16 +29,20 @@ func (c *Controller) CreateNetwork(ctx context.Context, info NetworkInfo) (strin
     if info.NetworkName == "bridge" || info.NetworkName == "host" || info.NetworkName == "none" {
         return "", fmt.Errorf("Network can't be named 'bridge', 'host' or 'none'")
     }
+    netName := fmt.Sprintf("disco-%s", info.NetworkName)
+    if nw, ok := c.nwPool[netName]; ok {
+        return nw.ID, nil
+    }
     resp, err := c.cli.NetworkCreate(
         ctx,
-        fmt.Sprintf("disco-%s", info.NetworkName),
+        netName,
         types.NetworkCreate{},
     )
     if err != nil {
         return "", err
     }
     info.ID = resp.ID
-    c.nwPool[info.NetworkName] = info
+    c.nwPool[netName] = info
     return resp.ID, nil
 }
 

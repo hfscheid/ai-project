@@ -11,7 +11,7 @@ func (d *Disco) createCLI() {
         WithLongDescription("disco - tool for creating, configuring and testing software routers. Use 'disco help' to list all available commands").
         AddSubCommand(
             d.newTestCmd(),
-            d.newAnnouceCmd(),
+            d.newAnnounceCmd(),
         ).
         Super()
     d.cli = rootCmd

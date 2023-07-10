@@ -21,6 +21,7 @@ containers:
     ip: 192.0.2.5
     configpaths:
       - /bgp-listener/confs:/etc/exabgp
+      - /bgp-listener/scripts:/opt/bgp-listener/scripts 
   - name: frr-router
     image:
       name: quay.io/frrouting/frr

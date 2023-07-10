@@ -15,11 +15,12 @@ Extend and update the existing testing framework to:
 Project contents:
 
 - `/routers`: BIRD and FRR router configuration files. The directories `/routers/bird/confs` and `/routers/frr/confs` are mounted
-  as volumes into each router specific Docker container when running the application.
-- `/bgp-announcer`: Configuration file for ExaBGP and a Python script that receives requests to annouce new BGP routes.
-  This instance of ExaBGP is responsible for announcing new routes in the routers.
+
+as volumes into each router specific Docker container when running the application.  
+- `/bgp-announcer`: Configuration file for ExaBGP and a Python script that receives requests to announce new BGP routes.
+This instance of ExaBGP is responsible for announcing new routes in the routers.
 - `/bgp-listener`: Configuration file for ExaBGP and a Python script that receives requests to gather the execution logs.
-  This instace of ExaBGP is responsible for receiving information regarding the annouced routes.
+This instace of ExaBGP is responsible for receiving information regarding the announced routes.
 - `/disco`: CLI application used for managing test cases (creation, execution, etc.).
 
 ## DISCO CLI
@@ -45,7 +46,7 @@ Usage:
   disco [command]
 
 Available Commands:
-  annouce     Command for annoucing BGP routes
+  announce     Command for announcing BGP routes
   completion  Generate the autocompletion script for the specified shell
   help        Help about any command
   test        Command for managing tests
@@ -61,7 +62,7 @@ The first time DISCO is run, it creates the folder and file `~/.disco/config.yam
 
 ### Usage
 
-The application has two main commands, `disco test [command]` for managing tests and `disco annouce [container_name] [announcement]` that sends a POST request to annouce new routes.
+The application has two main commands, `disco test [command]` for managing tests and `disco announce [container_name] [announcement]` that sends a POST request to announce new routes.  
 
 #### `disco test`
 
@@ -75,7 +76,7 @@ The application has two main commands, `disco test [command]` for managing tests
 | `stop`                        | Stops the currently selected test, if it's running                                                                                                                                                                                                         | `disco test stop`                     |
 | `delete`                      | Deletes the currently selected test. The test is removed from DISCO's config file, and all the Docker structures related to it are also deleted (containers, networks)                                                                                     | `disco test delete`                   |
 
-#### `disco annouce`
+#### `disco announce`
 
 For this command to work, the target ExaBGP container must have an `exposedport` (see config file example below) and a script that defines and runs a server which receives
 POST requests. An example of this server and its usage can be found [here](https://github.com/hfscheid/ai-project/tree/master/bgp-announcer).
@@ -83,6 +84,7 @@ POST requests. An example of this server and its usage can be found [here](https
 | Command                                   | Description                                                      | Example                                                                    |
 | ----------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `<container_name> <announcement_command>` | Sends request to server which will create the given announcement | `disco announce exa-announcer "annouce route 100.10.0.0/24 next-hop self"` |
+
 
 ### Test Case config file
 
@@ -105,3 +107,31 @@ containers: # List of containers to be created during the test
     configpaths: # Path to hosts' directories that will be mounted in the container
       - <path to host directory>:<path to container directory>
 ```
+
+### Known Limitations
+
+- `disco test create` doesn't validate the given YAML file for missing fields or invalid information yet.
+    - This validation can be implemented using [go-playground/validator](https://github.com/go-playground/validator).
+- When creating new containers and networks, the prefix "disco-" is added to the structure name defined by the user.
+This name is used by `disco test stop` and `disco test delete`, but if more than 1 containers or networks have the same name,
+the wrong structure might be deleted.
+- The script to analyze ExaBGP's logs is not yet integrated with the DISCO CLI.
+- Currently only one IPAM configuration is supported when defining a network.
+- Currently only one port of a container can be exposed and bounded to the localhost.
+- The CLI supports route announcement commands, but not withdraws (one can use `disco announce` to send any command to ExaBGP though).
+
+## Next Steps
+
+- Improve DISCO CLI
+    - Add unit tests
+    - Resolve the limitations mentioned previously
+- Add more examples of different network topologies
+
+## References
+
+- https://github.com/ksator/frrouting_demo/tree/master
+- https://www.watchguard.com/help/docs/help-center/en-US/Content/en-US/Fireware/dynamicrouting/bgp_sample_frr.html
+- https://deploy.equinix.com/developers/docs/metal/bgp/route-bgp-with-bird/#gathering-your-neighbor-information
+- https://github.com/CZ-NIC/bird/tree/master
+- https://github.com/Exa-Networks/exabgp/tree/main
+- https://bird.network.cz/doc/bird-1.html
