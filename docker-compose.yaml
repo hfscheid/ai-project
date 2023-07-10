@@ -18,6 +18,8 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.2
+    ports:
+      - "8080:4444"
 
   frr:
     container_name: frr_router

@@ -9,8 +9,9 @@ PORT = 5555
 def message_parser(line):
     temp_message = json.loads(line)
 
-    file = open("/opt/bgp-listener/logs/log.txt")
-    file.write(temp_message)
+    file = open("/opt/bgp-listener/logs/log.txt", "a+")
+    json.dump(temp_message, file)
+
     file.close()
 
 
