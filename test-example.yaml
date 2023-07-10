@@ -7,7 +7,7 @@ containers:
   - name: exa-announcer
     image:
       name: franciscobonand04/exabgp
-      version: 0.0.0-announcer
+      version: 4.2.20-announcer
     exposedport: 4444
     ip: 192.0.2.2
     configpaths:
@@ -16,7 +16,7 @@ containers:
   - name: exa-listener
     image:
       name: franciscobonand04/exabgp
-      version: 0.0.0-listener
+      version: 4.2.20-listener
     exposedport: 5555
     ip: 192.0.2.5
     configpaths:
@@ -31,7 +31,7 @@ containers:
   - name: bird-router
     image:
       name: franciscobonand04/bird
-      version: 0.0.0
+      version: 2.0.7
     ip: 192.0.2.4
     configpaths:
       - /routers/bird/confs:/etc/bird
