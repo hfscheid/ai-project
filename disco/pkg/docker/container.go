@@ -109,6 +109,14 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
             if err != nil {
                 return "", fmt.Errorf("%d: %s\n", statusCode, err.Error())
             }
+            logString, err := c.GetContainerLogs(ctx, info.ContainerName)
+            if err != nil {
+                return "", fmt.Errorf("Failed to get container logs for container %s: %q\n",
+                                      info.ContainerName,
+                                      err.Error())
+            }
+            logStream := strings.NewReader(fmt.Sprintf("[%s]: %s\n", info.ContainerName, logString)) 
+            io.Copy(os.Stdout, logStream)
         }
 
         return resp.ID, nil
