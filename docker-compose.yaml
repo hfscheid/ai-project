@@ -9,11 +9,12 @@ networks:
           gateway: 192.0.2.1
 
 services:
-  exabgp_sender:
-    container_name: exabgp_sender
-    image: pierky/exabgp:4.2.11
+  exabgp_announcer:
+    container_name: exabgp_announcer
+    image: franciscobonand04/exabgp:0.0.0
     volumes:
       - $PWD/bgp-announcer/confs:/etc/exabgp:rw
+      - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.2
@@ -39,16 +40,21 @@ services:
       - CAP_NET_ADMIN
       - CAP_NET_RAW
       - CAP_SYS_ADMIN
-    image: pierky/bird:3.0-alpha2
+    image: franciscobonand04/bird:0.0.0
     volumes:
       - $PWD/routers/bird/confs:/etc/bird:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.4
-#
-#
-#  exabgp_listener:
-#    container_name: exabgp_listener
-#    image: pierky/exabgp:4.2.11
-#    volumes:
-#      - $PWD/bgp-listener/confs:/etc/exabgp:rw
+
+  exabgp_listener:
+    container_name: exabgp_listener
+    image: franciscobonand04/exabgp:0.0.0
+    volumes:
+      - $PWD/bgp-listener/confs:/etc/exabgp:rw
+      - $PWD/bgp-listener/scripts:/opt/bgp-listener/scripts:rw
+    networks:
+      bgp-test:
+        ipv4_address: 192.0.2.5
+    stdin_open: true
+    tty: true
