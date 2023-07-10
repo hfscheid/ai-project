@@ -68,7 +68,7 @@ The application has two main commands, `disco test [command]` for managing tests
 | ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
 | `create </path/to/test.yaml>` | Creates a new test case defined by the config file (see config file example below)                                                                                                                                                                         | `disco test create test-example.yaml` |
 | `list`                        | Lists all available tests                                                                                                                                                                                                                                  | `disco test list`                     |
-| `select <test_name>`          | Selects an existing test. The commands `run`, `stop`, `describe` and `delete` are applied only in the currently selected test                                                                                                                              | `disco test select ExampleTest`       |
+| `select <test_name>`          | Selects an existing test. The commands `run`, `stop`, `describe` and `delete` are applied only to the currently selected test                                                                                                                              | `disco test select ExampleTest`       |
 | `describe`                    | Prints a detailed description of the currently selected test                                                                                                                                                                                               | `disco test describe`                 |
 | `run [--flag]`                | Executes the selected test (builds and runs containers, networks, images, etc.). Optionally the flag `--watch` can be used to attach to the containers' logs, similar to `docker compose up` (the logs will be printed to stdout once the test is stopped) | `disco test run`                      |
 | `stop`                        | Stops the currently selected test, if it's running                                                                                                                                                                                                         | `disco test stop`                     |
@@ -85,7 +85,7 @@ POST requests. An example of this server and its usage can be found [here](https
 
 ### Test Case config file
 
-To create a new test, the refence to a YAML file containing the test definition must be passed to `disco test create` command.  
+To create a new test, the path to a YAML file containing the test definition must be passed to `disco test create` command.  
 Below is the base-structure of a test definition, a working example can be found [here](https://github.com/hfscheid/ai-project/tree/master/test-example.yaml).
 
 ```yaml
