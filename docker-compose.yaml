@@ -11,13 +11,16 @@ networks:
 services:
   exabgp_announcer:
     container_name: exabgp_announcer
+
     image: franciscobonand04/exabgp:0.0.0
     volumes:
       - $PWD/bgp-announcer/confs:/etc/exabgp:rw
-      - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts:rw
+      - $PWD/bgp-announcer:/opt/bgp-announcer:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.2
+    stdin_open: true
+    tty: true
 
   frr:
     container_name: frr_router
@@ -32,6 +35,8 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.3
+    stdin_open: true
+    tty: true
 
   bird:
     container_name: bird_router
@@ -46,13 +51,15 @@ services:
     networks:
       bgp-test:
         ipv4_address: 192.0.2.4
+    stdin_open: true
+    tty: true
 
   exabgp_listener:
     container_name: exabgp_listener
     image: franciscobonand04/exabgp:0.0.0
     volumes:
       - $PWD/bgp-listener/confs:/etc/exabgp:rw
-      - $PWD/bgp-listener/scripts:/opt/bgp-listener/scripts:rw
+      - $PWD/bgp-listener:/opt/bgp-listener:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.5

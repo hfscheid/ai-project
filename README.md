@@ -6,7 +6,8 @@ Software routers allow for low-cost, high-flexibility routing in networks. Bugs 
 
 In this project we will extend and improve a framework for testing BGP announcements sent to BIRD and FRR software routers. This project will involve the following tasks:
 
-- Extend and update the existing testing framework to
+Extend and update the existing testing framework to:
+
 - Run software routers in Docker containers
 - Build containers images for multiple major versions of each software router
 - Streamline creation of prefix announcements using ExaBGP or GoBGP
@@ -17,4 +18,3 @@ Improvements:
 
 - DISCO: CLI (command line interface) to ... TODO
 - ...
-
