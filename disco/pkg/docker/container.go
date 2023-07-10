@@ -60,15 +60,18 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
     }
 
     containerName := fmt.Sprintf("disco-%s", info.ContainerName)
+    containerCfg := &container.Config{
+        Image: dockerImage,
+        Tty:   false,
+    }
+    if info.ExposePort != "" {
+        containerCfg.ExposedPorts = nat.PortSet{
+            nat.Port(info.ExposePort): struct{}{},
+        }
+    }
 	resp, err := c.cli.ContainerCreate(
         ctx,
-        &container.Config{
-            Image: dockerImage,
-            Tty:   false,
-            ExposedPorts: nat.PortSet{
-                nat.Port(info.ExposePort): struct{}{},
-            },
-        },
+        containerCfg,
         &container.HostConfig{
             Privileged: false,
             CapAdd: []string{"CAP_NET_ADMIN", "CAP_NET_RAW", "CAP_SYS_ADMIN"},

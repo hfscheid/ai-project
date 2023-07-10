@@ -93,6 +93,10 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) ([]docker.
                 VolumeTarget: dirs[1],
             })
         }
+        exposedPort := ""
+        if c.ExposedPort > 0 {
+            exposedPort = fmt.Sprintf("%v",c.ExposedPort)
+        }
         cInfo := docker.ContainerInfo {
             ContainerName: c.Name,
             NetworkName: nwName,
@@ -100,7 +104,7 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) ([]docker.
             ImageVersion: c.Image.Version,
             Volumes: vols,
             ContainerIp: c.IP,
-            ExposePort: fmt.Sprintf("%v",c.ExposedPort),
+            ExposePort: exposedPort,
         }
         cInfos[i] = cInfo
     }
