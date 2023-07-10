@@ -1,0 +1,180 @@
+{
+    "exabgp": "5.0.0",
+    "time": 1689010988.73119,
+    "host": "8ee8d25f4eb1",
+    "pid": 7,
+    "ppid": 1,
+    "counter": 4,
+    "type": "update",
+    "neighbor": {
+        "address": {
+            "local": "192.0.2.5",
+            "peer": "192.0.2.4"
+        },
+        "asn": {
+            "local": 65150,
+            "peer": 65200
+        },
+        "direction": "receive",
+        "message": {
+            "update": {
+                "withdraw": {
+                    "ipv4 unicast": [
+                        {
+                            "nlri": "123.12.0.0/24"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}{
+    "exabgp": "5.0.0",
+    "time": 1689011086.5575442,
+    "host": "8ee8d25f4eb1",
+    "pid": 7,
+    "ppid": 1,
+    "counter": 1,
+    "type": "update",
+    "neighbor": {
+        "address": {
+            "local": "192.0.2.5",
+            "peer": "192.0.2.4"
+        },
+        "asn": {
+            "local": 65150,
+            "peer": 65200
+        },
+        "direction": "receive",
+        "message": {
+            "eor": {
+                "afi": "ipv4",
+                "safi": "unicast"
+            }
+        }
+    }
+}{
+    "exabgp": "5.0.0",
+    "time": 1689011130.3852682,
+    "host": "8ee8d25f4eb1",
+    "pid": 7,
+    "ppid": 1,
+    "counter": 2,
+    "type": "update",
+    "neighbor": {
+        "address": {
+            "local": "192.0.2.5",
+            "peer": "192.0.2.4"
+        },
+        "asn": {
+            "local": 65150,
+            "peer": 65200
+        },
+        "direction": "receive",
+        "message": {
+            "update": {
+                "attribute": {
+                    "origin": "igp",
+                    "as-path": {
+                        "0": {
+                            "element": "as-sequence",
+                            "value": [
+                                65200,
+                                54000,
+                                500,
+                                55000,
+                                20
+                            ]
+                        }
+                    }
+                },
+                "announce": {
+                    "ipv4 unicast": {
+                        "192.0.2.4": [
+                            {
+                                "nlri": "123.12.0.0/24"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}{
+    "exabgp": "5.0.0",
+    "time": 1689011141.4700625,
+    "host": "8ee8d25f4eb1",
+    "pid": 7,
+    "ppid": 1,
+    "counter": 3,
+    "type": "update",
+    "neighbor": {
+        "address": {
+            "local": "192.0.2.5",
+            "peer": "192.0.2.4"
+        },
+        "asn": {
+            "local": 65150,
+            "peer": 65200
+        },
+        "direction": "receive",
+        "message": {
+            "update": {
+                "attribute": {
+                    "origin": "igp",
+                    "as-path": {
+                        "0": {
+                            "element": "as-sequence",
+                            "value": [
+                                65200,
+                                54000,
+                                500,
+                                55000,
+                                200
+                            ]
+                        }
+                    }
+                },
+                "announce": {
+                    "ipv4 unicast": {
+                        "192.0.2.4": [
+                            {
+                                "nlri": "123.12.0.0/24"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}{
+    "exabgp": "5.0.0",
+    "time": 1689011502.0554793,
+    "host": "8ee8d25f4eb1",
+    "pid": 7,
+    "ppid": 1,
+    "counter": 4,
+    "type": "update",
+    "neighbor": {
+        "address": {
+            "local": "192.0.2.5",
+            "peer": "192.0.2.4"
+        },
+        "asn": {
+            "local": 65150,
+            "peer": 65200
+        },
+        "direction": "receive",
+        "message": {
+            "update": {
+                "withdraw": {
+                    "ipv4 unicast": [
+                        {
+                            "nlri": "123.12.0.0/24"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

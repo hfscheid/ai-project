@@ -1,0 +1,2 @@
+announce route 122.23.0.0/24 next-hop self community [5400:3]
+announce route 122.23.0.0/24 next-hop self community [5400:3]
