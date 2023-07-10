@@ -1,2 +1,0 @@
-announce route 134.10.0.0/24 next-hop self
-announce route 123.12.0.0/24 next-hop self
