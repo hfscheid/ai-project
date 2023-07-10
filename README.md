@@ -4,7 +4,8 @@ Software routers allow for low-cost, high-flexibility routing in networks. Bugs 
 
 In this project we will extend and improve a framework for testing BGP announcements sent to [BIRD](https://github.com/CZ-NIC/bird) and [FRR](https://github.com/FRRouting/frr) software routers. This project will involve the following tasks:
 
-- Extend and update the existing testing framework to
+Extend and update the existing testing framework to:
+
 - Run software routers in Docker containers
 - Build containers images for multiple major versions of each software router
 - Streamline creation of prefix announcements using [ExaBGP](https://github.com/Exa-Networks/exabgp)
@@ -14,11 +15,11 @@ In this project we will extend and improve a framework for testing BGP announcem
 Project contents:
 
 - `/routers`: BIRD and FRR router configuration files. The directories `/routers/bird/confs` and `/routers/frr/confs` are mounted
-as volumes into each router specific Docker container when running the application.  
+  as volumes into each router specific Docker container when running the application.
 - `/bgp-announcer`: Configuration file for ExaBGP and a Python script that receives requests to annouce new BGP routes.
-This instance of ExaBGP is responsible for announcing new routes in the routers.
+  This instance of ExaBGP is responsible for announcing new routes in the routers.
 - `/bgp-listener`: Configuration file for ExaBGP and a Python script that receives requests to gather the execution logs.
-This instace of ExaBGP is responsible for receiving information regarding the annouced routes.
+  This instace of ExaBGP is responsible for receiving information regarding the annouced routes.
 - `/disco`: CLI application used for managing test cases (creation, execution, etc.).
 
 ## DISCO CLI
@@ -30,7 +31,7 @@ as well as sending requests to specific containers, such as ExaBGP ones, so new 
 ### Install
 
 DISCO uses [Docker SDK](https://docs.docker.com/engine/api/sdk/) to manage containers, images and networks.
-So before installing DISCO be sure to have the [Docker Engine](https://docs.docker.com/engine/install/) installed.  
+So before installing DISCO be sure to have the [Docker Engine](https://docs.docker.com/engine/install/) installed.
 
 The CLI was build using Golang, so the final application is just a binary file. To download it, check the most recent released version in this repo's [release page](https://github.com/hfscheid/ai-project/releases).  
 After downloading it, add the directory in which the binary is stored to your `$PATH`, so it will be available in your terminal.  
@@ -56,11 +57,11 @@ Flags:
 Use "disco [command] --help" for more information about a command.
 ```
 
-The first time DISCO is run, it creates the folder and file `~/.disco/config.yaml`, which is used to store information that allows the application to work properly.  
+The first time DISCO is run, it creates the folder and file `~/.disco/config.yaml`, which is used to store information that allows the application to work properly.
 
 ### Usage
 
-The application has two main commands, `disco test [command]` for managing tests and `disco annouce [container_name] [announcement]` that sends a POST request to annouce new routes.  
+The application has two main commands, `disco test [command]` for managing tests and `disco annouce [container_name] [announcement]` that sends a POST request to annouce new routes.
 
 #### `disco test`
 
@@ -77,10 +78,10 @@ The application has two main commands, `disco test [command]` for managing tests
 #### `disco annouce`
 
 For this command to work, the target ExaBGP container must have an `exposedport` (see config file example below) and a script that defines and runs a server which receives
-POST requests. An example of this server and its usage can be found [here](https://github.com/hfscheid/ai-project/tree/master/bgp-announcer).  
+POST requests. An example of this server and its usage can be found [here](https://github.com/hfscheid/ai-project/tree/master/bgp-announcer).
 
-| Command                                     | Description                                                      | Example                                                                    |
-| ------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Command                                   | Description                                                      | Example                                                                    |
+| ----------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `<container_name> <announcement_command>` | Sends request to server which will create the given announcement | `disco announce exa-announcer "annouce route 100.10.0.0/24 next-hop self"` |
 
 ### Test Case config file

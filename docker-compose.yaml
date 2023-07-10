@@ -14,7 +14,7 @@ services:
     image: franciscobonand04/exabgp:4.2.20-announcer
     volumes:
       - $PWD/bgp-announcer/confs:/etc/exabgp:rw
-      - $PWD/bgp-announcer/scripts:/opt/bgp-announcer/scripts:rw
+      - $PWD/bgp-announcer:/opt/bgp-announcer:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.2
@@ -52,9 +52,7 @@ services:
     image: franciscobonand04/exabgp:4.2.20-listener
     volumes:
       - $PWD/bgp-listener/confs:/etc/exabgp:rw
-      - $PWD/bgp-listener/scripts:/opt/bgp-listener/scripts:rw
+      - $PWD/bgp-listener:/opt/bgp-listener:rw
     networks:
       bgp-test:
         ipv4_address: 192.0.2.5
-    stdin_open: true
-    tty: true
