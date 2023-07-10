@@ -20,8 +20,13 @@ func (d *Disco) newTestSelectCmd() *cobra.Command {
 func (d *Disco) selectTest(ctx context.Context, s []string) error {
     testName := s[0]
     if _, ok := d.tests.TestCases[testName]; !ok {
-        return fmt.Errorf("Unable to find test %q", testName)
+        fmt.Printf("Unable to find test %q\n", testName)
+        return nil
     }
     d.tests.SelectedTest = d.tests.TestCases[testName]
-    return config.WriteToConfigFile(d.tests)
+    err := config.WriteToConfigFile(d.tests)
+    if err != nil {
+        fmt.Println(err)
+    }
+    return nil
 }

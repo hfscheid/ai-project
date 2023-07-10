@@ -42,7 +42,8 @@ func (d *Disco) newTestDescribeCmd() *cobra.Command {
 func (d *Disco) describeTest(_ context.Context, c *cobra.Command) error {
     currTest := d.selectedTest
     if currTest == nil {
-        return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
+        fmt.Println("No test selected, run 'disco test select <test_name>'")
+        return nil
     }
     netDesc := generateNetworkDescription(currTest.Network)
     containerDesc := ""

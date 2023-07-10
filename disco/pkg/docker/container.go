@@ -111,6 +111,9 @@ func (c *Controller) StopContainer(ctx context.Context, containerName string) er
 }
 
 func (c *Controller) RemoveContainer(ctx context.Context, containerName string) error {
+    if _, ok := c.containerPool[containerName]; !ok {
+        return nil
+    }
     id := c.containerPool[containerName].ID
     err := c.cli.ContainerRemove(ctx, id, types.ContainerRemoveOptions{})
     if err != nil {
@@ -134,7 +137,6 @@ func (c *Controller) ContainerWait(ctx context.Context, id string) (int64, error
 func (c *Controller) GetContainerLogs(ctx context.Context, id string) (string, error) {
     logCtx, cancel := context.WithTimeout(ctx, time.Second * 10)
     defer cancel()
-
 
 	out, err := c.cli.ContainerLogs(logCtx, id, types.ContainerLogsOptions{
         ShowStdout: true,

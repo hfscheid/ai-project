@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"path/filepath"
 	"strings"
 	"sync"
 
@@ -34,14 +35,16 @@ func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
     watch := cmd.DiscoOptions.Watch
     test := d.selectedTest
     if test == nil {
-        return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
+        fmt.Println("No test selected, run 'disco test select <test_name>'")
+        return nil
     }
 
     var wg sync.WaitGroup
     nwInfo := dockerTranslateNw(test.Network)
     if nwId, err := d.dockerC.CreateNetwork(ctx, nwInfo);
     err != nil {
-        return fmt.Errorf("Network %s: %q", nwId, err)
+        fmt.Printf("Network %s: %q\n", nwId, err)
+        return nil
     }
 
     cntInfos, err := dockerTranslateContainers(test.Containers, nwInfo.NetworkName)
@@ -74,6 +77,10 @@ func dockerTranslateNw(nw *config.Network) docker.NetworkInfo {
 
 func dockerTranslateContainers(cs []*config.Container, nwName string) ([]docker.ContainerInfo, error) {
     cInfos := make([]docker.ContainerInfo, len(cs))
+    currDir, err := filepath.Abs(".")
+    if err != nil {
+        return nil, fmt.Errorf("Error getting absolute path to curr dir: %v", err)
+    }
     for i, c := range(cs) {
         vols := []docker.VolumeInfo{}
         for _, p := range c.ConfigPaths {
@@ -82,7 +89,7 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) ([]docker.
                 return nil, fmt.Errorf("Config paths must be in the format '<host path>:<container path>'")
             }
             vols = append(vols, docker.VolumeInfo{
-                VolumeSource: dirs[0],
+                VolumeSource: filepath.Join(currDir, dirs[0]),
                 VolumeTarget: dirs[1],
             })
         }

@@ -40,6 +40,9 @@ func (c *Controller) CreateNetwork(ctx context.Context, info NetworkInfo) (strin
 }
 
 func (c *Controller) RemoveNetwork(ctx context.Context, networkName string) error {
+    if _, ok := c.nwPool[networkName]; !ok {
+        return nil
+    }
     id := c.nwPool[networkName].ID
     err := c.cli.NetworkRemove(ctx, id)
     if err != nil {

@@ -21,14 +21,16 @@ func (d *Disco) newTestDeleteCmd() *cobra.Command {
 func (d *Disco) deleteTest(ctx context.Context, c *cobra.Command) error {
     currTest := d.selectedTest
     if currTest == nil {
-        return fmt.Errorf("No test selected, run 'disco test select <test_name>'")
+        fmt.Println("No test selected, run 'disco test select <test_name>'")
+        return nil
     }
 
     delete(d.tests.TestCases, currTest.Name)
     d.selectedTest = nil
     err := config.WriteToConfigFile(d.tests)
     if err != nil {
-        return fmt.Errorf("Failed to remove test from config file: %v", err)
+        fmt.Printf("Failed to remove test from config file: %v\n", err)
+        return nil
     }
     errs := []error{}
     for _, container := range currTest.Containers {
@@ -39,11 +41,12 @@ func (d *Disco) deleteTest(ctx context.Context, c *cobra.Command) error {
     }
     if err := errors.Join(errs...);
     err != nil {
-        return fmt.Errorf("Unable to remove containers: %v", err)
+        fmt.Printf("Unable to remove containers: %v\n", err)
+        return nil
     }
     err = d.dockerC.RemoveNetwork(ctx, currTest.Network.Name)
     if err != nil {
-        return fmt.Errorf("Unable to remove network: %v", err)
+        fmt.Printf("Unable to remove network: %v\n", err)
     }
     return nil
 }
