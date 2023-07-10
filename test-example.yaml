@@ -1,0 +1,36 @@
+name: ExampleTest
+network:
+  name: net1
+  subnet: 192.0.2.0/24
+  gateway: 192.0.2.1
+containers:
+  - name: exa-announcer
+    image:
+      name: franciscobonand04/exabgp
+      version: 0.0.0-announcer
+    exposedport: 4444
+    ip: 192.0.2.2
+    configpaths:
+      - $PWD/bgp-announcer/confs:/etc/exabgp
+  - name: exa-listener
+    image:
+      name: franciscobonand04/exabgp
+      version: 0.0.0-listener
+    exposedport: 5555
+    ip: 192.0.2.5
+    configpaths:
+      - $PWD/bgp-listener/confs:/etc/exabgp
+  - name: frr-router
+    image:
+      name: quay.io/frrouting/frr
+      version: 8.5.1
+    ip: 192.0.2.3
+    configpaths:
+      - $PWD/routers/frr/confs:/etc/frr
+  - name: bird-router
+    image:
+      name: franciscobonand04/bird
+      version: 0.0.0
+    ip: 192.0.2.4
+    configpaths:
+      - $PWD/routers/bird/confs:/etc/bird

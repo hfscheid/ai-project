@@ -45,7 +45,10 @@ func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
         return fmt.Errorf("Network %s: %q", nwId, err)
     }
 
-    cntInfos := dockerTranslateContainers(test.Containers, nwInfo.NetworkName)
+    cntInfos, err := dockerTranslateContainers(test.Containers, nwInfo.NetworkName)
+    if err != nil {
+        return err
+    }
     wg.Add(len(cntInfos))
     errCh := make(chan error)
     errA := []error{}
@@ -82,12 +85,15 @@ func dockerTranslateNw(nw *config.Network) docker.NetworkInfo {
     }
 }
 
-func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.ContainerInfo {
+func dockerTranslateContainers(cs []*config.Container, nwName string) ([]docker.ContainerInfo, error) {
     cInfos := make([]docker.ContainerInfo, len(cs))
     for i, c := range(cs) {
         vols := []docker.VolumeInfo{}
         for _, p := range c.ConfigPaths {
             dirs := strings.Split(p, ":")
+            if len(dirs) != 2 {
+                return nil, fmt.Errorf("Config paths must be in the format '<host path>:<container path>'")
+            }
             vols = append(vols, docker.VolumeInfo{
                 VolumeSource: dirs[0],
                 VolumeTarget: dirs[1],
@@ -104,5 +110,5 @@ func dockerTranslateContainers(cs []*config.Container, nwName string) []docker.C
         }
         cInfos[i] = cInfo
     }
-    return cInfos
+    return cInfos, nil
 }
