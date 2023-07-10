@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -50,31 +49,19 @@ func (d *Disco) runTest(ctx context.Context, c *cobra.Command) error {
         return err
     }
     wg.Add(len(cntInfos))
-    errCh := make(chan error)
-    errA := []error{}
-    go func(errCh chan error, errA []error) {
-        for {
-            err, ok := <- errCh
-            if ok {
-                errA = append(errA, err)
-            } else {
-                return
-            }
-        }
-    }(errCh, errA)
+    fmt.Println("Starting containers...")
     for _, c := range cntInfos {
-        go func(ctx context.Context, c *docker.ContainerInfo,
-                wg *sync.WaitGroup, errCh chan error) {
-            id, err := d.dockerC.RunContainer(ctx, *c, watch)
+        cont := c
+        go func(ctx context.Context, cont *docker.ContainerInfo, wg *sync.WaitGroup) {
+            _, err := d.dockerC.RunContainer(ctx, *cont, watch)
             if err != nil {
-                errCh <- fmt.Errorf("%v: %q", id, err)
+                fmt.Printf("%s: %q\n", cont.ContainerName, err)
             }
             wg.Done()
-        }(ctx, &c, &wg, errCh)
+        }(ctx, &cont, &wg)
     }
     wg.Wait()
-    close(errCh)
-    return errors.Join(errA...)
+    return nil
 }
 
 func dockerTranslateNw(nw *config.Network) docker.NetworkInfo {

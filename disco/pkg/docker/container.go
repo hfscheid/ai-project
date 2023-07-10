@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"os"
+	"strings"
 	"time"
 
 	"github.com/docker/docker/api/types"
@@ -57,6 +59,7 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
         })
     }
 
+    containerName := fmt.Sprintf("disco-%s", info.ContainerName)
 	resp, err := c.cli.ContainerCreate(
         ctx,
         &container.Config{
@@ -75,11 +78,13 @@ func (c *Controller) RunContainer(ctx context.Context, info ContainerInfo, watch
             EndpointsConfig: map[string]*network.EndpointSettings{
                 info.NetworkName: endpt,
             },
-        }, nil, fmt.Sprintf("disco-%s", info.ContainerName))
+        }, nil, containerName)
 	if err != nil {
         return "", err
 	}
 
+    tst := strings.NewReader(fmt.Sprintf("Running container [%s] %s\n", resp.ID, containerName))
+    _, _ = io.Copy(os.Stdout, tst)
 	if err := c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
         return "", err
 	}
