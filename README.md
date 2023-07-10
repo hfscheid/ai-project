@@ -119,6 +119,9 @@ the wrong structure might be deleted.
 - Currently only one IPAM configuration is supported when defining a network.
 - Currently only one port of a container can be exposed and bounded to the localhost.
 - The CLI supports route announcement commands, but not withdraws (one can use `disco announce` to send any command to ExaBGP though).
+- Automate testing was not possible to be implemented because of the poor formatting of ExaBGP's API interface and it's almost none-written documentation.
+    - Because of that, custom logs where implemented where one can check how the announcements flooded the network.
+    - Those logs are located in ./bgp-<announcer|listener>/logs/log.txt and can be checked by the user after announcing routes.
 
 ## Next Steps
 
@@ -126,6 +129,7 @@ the wrong structure might be deleted.
     - Add unit tests
     - Resolve the limitations mentioned previously
 - Add more examples of different network topologies
+- Seek a way of implementing automate testing despite the limitations regarding ExaBGP
 
 ## References
 
